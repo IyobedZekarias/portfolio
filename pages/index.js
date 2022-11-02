@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,7 +9,11 @@ import { loadFull } from "tsparticles";
 import Header from '../components/Header'
 
 export default function Home() {
+  const [toggle, setToggle] = useState(true);
   const options = {
+    fullScreen: {
+      enable: true,
+    },
     particles: {
       number: {
         value: 50,
@@ -18,7 +23,7 @@ export default function Home() {
         },
       },
       color: {
-        value: ["#fff", "#232338"],
+        value: ["#eaeaea", "#232338", "#fff"],
       },
       shape: {
         type: "circle",
@@ -44,6 +49,7 @@ export default function Home() {
         straight: false,
         outModes: "out",
       },
+      fullScreen: false,
     },
     interactivity: {
       detect_on: "window",
@@ -103,8 +109,11 @@ export default function Home() {
             {" "}
             I set up this portfolio as a way of showcasing some of the projects
             that I am most proud of. There are projects included here that were
-            written in python, C++, Javascript, and more. For my projects to run here I used
-            a graphql schema to communicate between them and this front-end. The front end was created using the NextJS framework for React. In additon to the frontend, NextJS was used to build the api to connect to the projects as well. 
+            written in python, C++, Javascript, and more. For my projects to run
+            here I used a graphql schema to communicate between them and this
+            front-end. The front end was created using the NextJS framework for
+            React. In additon to the frontend, NextJS was used to build the api
+            to connect to the projects as well.
           </p>
         </div>
       </main>

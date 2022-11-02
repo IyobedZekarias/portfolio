@@ -25,15 +25,42 @@
   padding-inline: 20px;
 }
 
-.Particles {
-  z-index: -10;
+.About {
+  min-height: 60vh;
+  margin-top: 5px;
+  width: 80vw;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  border: 2px solid #eaeaea; 
+  align-items: center;
+  padding-inline: 20px;
+  flex-wrap: wrap;
+}
+
+.About img {
+  -webkit-filter: grayscale(1) drop-shadow(20px 15px 0 #0070f3);
+  filter: grayscale(1) drop-shadow(20px 15px 0 #0070f3);
+  transition-duration: 300ms;
+  max-width: 55%;
+  min-width: 40%; 
+  height: auto;
+}
+
+.About p {
+  min-width: 45%;
+  max-width: 55%;
+}
+
+.About img:hover {
+  -webkit-filter: grayscale(0) drop-shadow(0 0 0 black) ;
+  filter: grayscale(0) drop-shadow(0 0 0 black);
 }
 
 
 .header {
   display: flex;
   flex: 5 2;
-  padding: 2rem 0;
   border-bottom: 1px solid #eaeaea;
   justify-content: center;
 }
@@ -50,10 +77,14 @@
   width: 20em;
   margin-right: 15vw;
   margin-left: 3vw;
+  margin-bottom: 5px;
   align-items: center;
   justify-content: left;
   padding: 10px;
   gap: 20px;
+  border-radius: 10px;
+  border: 1px solid white;
+  transition-duration: 300ms;
 }
 
 .Hero:hover {
@@ -71,6 +102,7 @@
   border-radius: 10px;
   margin-left: 20px;
   margin-bottom: 10px;
+  transition-duration: 300ms;
 }
 
 .navigation a:hover{
@@ -177,6 +209,8 @@
   margin: 10px;
   color: white;
   border-radius: 10px;
+  transition-duration: 300ms;
+  border: 1px solid #0070f3;
 }
 
 .pdf img {
@@ -222,6 +256,12 @@
   .fullBodyImg {
     display: none;
   }
+  .About p{
+    min-width: 100%;
+  }
+  .About img{
+    min-width: 100%;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -236,4 +276,55 @@
   .logo img {
     filter: invert(1);
   }
+  .Hero{
+    border: 1px solid #232338;
+  }
+  .About img {
+    -webkit-filter: grayscale(1) drop-shadow(20px 15px 0 #eaeaea);
+    filter: grayscale(1) drop-shadow(20px 15px 0 #eaeaea);
+  }
+}
+
+
+
+
+.react_switch_checkbox {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.react_switch_label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  width: 100px;
+  height: 50px;
+  background: grey;
+  border-radius: 100px;
+  position: relative;
+  transition: background-color .2s;
+}
+
+.react_switch_label .react_switch_button {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 45px;
+  height: 45px;
+  border-radius: 45px;
+  transition: 0.2s;
+  background: #fff;
+  box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+}
+
+.react_switch_checkbox:checked+.react_switch_label .react_switch_button {
+  left: calc(100% - 2px);
+  transform: translateX(-100%);
+}
+
+.react_switch_label:active .react_switch_button {
+  width: 60px;
 }
