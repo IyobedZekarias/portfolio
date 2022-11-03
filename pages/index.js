@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Head from 'next/head'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useCallback } from "react";
 import styles from '../styles/Home.module.css'
 import Particles from "react-tsparticles";
@@ -16,7 +15,7 @@ export default function Home() {
     },
     particles: {
       number: {
-        value: 50,
+        value: 120,
         density: {
           enable: true,
           area: 1000,
