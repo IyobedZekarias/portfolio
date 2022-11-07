@@ -74,6 +74,7 @@ export default function Email({ CloseEmail }) {
               </svg>
             </div>
             <form className={styles.ModalForm}>
+              <h1 style={{color: "black"}}>Send Me a Message</h1>
               <label className={styles.ModalName}>
                 <input
                   className={styles.ModalInput}
@@ -106,12 +107,12 @@ export default function Email({ CloseEmail }) {
                   value={toSend.message}
                 />
               </label>
-                <ReCAPTCHA
-                  ref={refCaptcha}
-                  sitekey={keys.captchKey}
-                  onChange={() => setCapStage(true)}
-                  style={{ margin: "5px" }}
-                />
+              <ReCAPTCHA
+                ref={refCaptcha}
+                sitekey={keys.captchKey}
+                onChange={() => setCapStage(true)}
+                style={{ margin: "5px" }}
+              />
               {capStage ? (
                 <button
                   className={styles.ModalSubmit}

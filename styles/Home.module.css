@@ -31,7 +31,7 @@
   z-index: -1;
 }
 
-.About {
+.About, .Numerical {
   min-height: 60vh;
   margin-top: 5px;
   width: 80vw;
@@ -40,8 +40,55 @@
   justify-content: center;
   border: 2px solid #eaeaea; 
   align-items: center;
-  padding-inline: 20px;
   flex-wrap: wrap;
+  transition-duration: 500ms;
+}
+
+.Numerical {
+  flex-direction: column;
+  transition-duration: 500ms;
+}
+
+.About {
+  padding-inline: 20px;
+}
+
+.About * {
+  transition-duration: 300ms;
+}
+
+.ANumerical {
+  border: 2px solid #0070f3;
+  min-height: 60vh;
+  margin-top: 5px;
+  width: 80vw;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  transition-duration: 300ms;
+}
+
+.ANumerical *, .Numerical * {
+  animation-duration: 1.3s;
+  animation-name: animate-pop;
+  animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
+}
+
+.Numerical, .ANumerical {
+  margin-bottom: 15vh;
+}
+
+@keyframes animate-pop {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 .About img {
@@ -58,7 +105,7 @@
   filter: grayscale(0) drop-shadow(0 0 0 black);
 }
 
-.About p {
+.AboutParagraph {
   min-width: 45%;
   max-width: 55%;
   padding: 1%;
@@ -68,11 +115,48 @@
   background-color: antiquewhite;
 }
 
-.About p:hover {
+.AboutParagraph:hover {
   border: 1px solid #0070f3;
   padding: 1%;
   background-color: white;
 
+}
+
+.matrixVal {
+  font-size: 2vw;
+}
+
+.MatrixTot {
+  padding: 1%;
+  transition: 300ms;
+  display: flex;
+  justify-content: space-around;
+}
+
+.Matrix{
+  border-radius: 10px;
+  border: 1px solid antiquewhite;
+  background-color: antiquewhite;
+  min-width: 100%;
+  transition: 500ms;
+  padding-inline: 5px;
+  margin-bottom: 10px;
+}
+
+.Matrix:hover {
+  border: 1px solid #0070f3;
+  background-color: white;
+}
+
+.numOps {
+  display: flex; 
+  width: 100%;
+  flex-direction:column;
+  justify-content: space-around;
+  align-items: center;
+}
+.numOps button {
+  width: 30%;
 }
 
 .header {
@@ -149,6 +233,8 @@
   border-radius: 10px;
   margin-left: 8px;
   margin-right: 8px;
+  color: antiquewhite;
+  background-color: #222;
 }
 
 .ModalSubmit {
@@ -156,8 +242,8 @@
   background-color: #0070f3;
   border: 1px solid #0070f3;
   border: none;
-  width: 20%;
-  height: 15%;
+  width: auto;
+  height: auto;
   padding: 10px;
   margin: 10px;
   transition: 300ms;
@@ -165,7 +251,6 @@
 }
 
 .ModalSubmit:hover {
-  border: 1px solid #0070f3;
   color: #0070f3;
   background: antiquewhite;
 }
@@ -175,7 +260,7 @@
   background-color: rgb(7, 78, 159);
   border: 1px solid rgb(7, 78, 159);
   border: none;
-  width: 20%;
+  width: auto;
   height: 15%;
   padding: 10px;
   margin: 10px;
@@ -233,6 +318,54 @@
 .Active {
   background-color: #0070f3;
   color: white;
+}
+
+.projectList {
+  position: absolute;
+  background-color: #222;
+  z-index: 10;
+  border-radius: 10px;
+  margin-left: 10px;
+  width: 117px;
+  animation-duration: 300ms;
+  animation-name: nav;
+  animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
+}
+
+.projectList a {
+  margin-left: 0;
+  margin-bottom: 10px;
+  margin-right: 2px;
+  margin-top: 10px;
+  width: 100%;
+  border: 1px solid #222;
+  animation-duration: 800ms;
+  animation-name: animate-pop;
+  animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
+}
+
+@keyframes nav {
+  0% {
+    height: 0; 
+    width: 0;
+    opacity: 0;
+  }
+
+  100% {
+    height: 150px;
+    width: 117px;
+    opacity: 1;
+  }
+}
+
+.proj {
+  color: white;
+}
+
+.projact {
+  border-radius: 3px;
+  background-color: antiquewhite;
+  color: black;
 }
 
 .footer {
@@ -363,7 +496,11 @@
   .header {
     flex-direction:  column;
   }
+    .projects {
+      margin-bottom: 0;
+    }
   .navigation a, 
+  .navigation div,
   .Hero {
     margin: 0;
     border-radius: 3px;
@@ -371,13 +508,16 @@
     width: 100%;
     height: auto;
     justify-content: center;
-    margin-bottom: 5px;
     transition-duration: 300ms;
+  }
+  .navigation a,
+  .Hero {
+    margin-bottom: 5px;
   }
   .fullBodyImg {
     display: none;
   }
-  .About p{
+  .AboutParagraph{
     min-width: 100%;
   }
   .About img{
@@ -391,6 +531,19 @@
   .Modal{
     width: 90%;
     margin-top: 80%;
+  }
+  .projectList{
+    animation-duration: 200ms;
+    animation-name: nav-phone;
+    animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
+  }
+  @keyframes nav-phone {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: auto;
+    }
   }
 }
 
@@ -415,18 +568,21 @@
     -webkit-filter: grayscale(1) drop-shadow(20px 15px 0 antiquewhite);
     filter: grayscale(1) drop-shadow(20px 15px 0 antiquewhite);
   }
-  .About p {
+  .AboutParagraph {
     background-color: antiquewhite;
     border: 1px solid antiquewhite;
     color: #232338;
   }
-  .About p:hover{
+  .AboutParagraph:hover{
     background-color: #232338;
     color: antiquewhite;
     border: 1px solid antiquewhite;
   }
   .AboutTitle {
     color: antiquewhite;
+  }
+  .matrixVal{
+    color: black;
   }
 }
 

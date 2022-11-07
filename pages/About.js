@@ -12,7 +12,7 @@ export default function About() {
         <main className={styles.main}>
           <h1 className={styles.AboutTitle}>Learn About Me</h1>
           <div className={styles.About}>
-            <p>
+            <p className={styles.AboutParagraph}>
               Hello, my name is Iyobed Zekarias (yo-bed – zuh-car-ee-us), I am a
               computer programmer currently located in New York City. I have a
               passion for both technology and building things, building computer
@@ -30,7 +30,7 @@ export default function About() {
               technologies and has given me a broad understanding of how both
               business needs and new technologies interact every day.
             </p>
-            <p>
+            <p className={styles.AboutParagraph}>
               Some things about me, I love running, working out, and getting
               active in general. NYC is a great place to do that whether it’s
               going to a park, gym, or taking a train out of the city. I moved
