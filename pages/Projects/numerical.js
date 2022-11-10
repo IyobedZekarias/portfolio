@@ -1,11 +1,21 @@
-import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
 import styles from "../../styles/Home.module.css";
 import Header from "../../components/Header";
 import { useState } from "react";
 
- 
+export function getStaticProps() {
+  return {
+    props: {
+      CaptchaVariables: {
+        service: process.env.SERVICE,
+        template: process.env.TEMPLATE,
+        publicKey: process.env.PUBLICKEY,
+        captchKey: process.env.CAPTCHAKEY,
+      },
+    },
+  };
+}
+
 const exampleEquations = (
         <label className={styles.ModalName}>
             <label
@@ -55,7 +65,7 @@ const exampleEquations = (
     );
 
 
-export default function Numerical() {
+export default function Numerical(props) {
     const [current, setCurrent] = useState('Description')
   // -------- INTERPOLATION/extrapolation VALUES -------- //
     const [interpVarCount, setInterpVarCount] = useState(20)
@@ -284,7 +294,7 @@ export default function Numerical() {
 
     return (
       <div className={styles.container}>
-        <Header active="Projects" projActive="numerical" />
+        <Header active="Projects" projActive="numerical" CaptchaVariables={ props.CaptchaVariables } />
 
         <main className={styles.main}>
           {/* INTRO */}

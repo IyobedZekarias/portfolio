@@ -5,7 +5,7 @@ import Email from "./Email"
 import { useState, useEffect, useRef } from 'react'
 
 
-export default function Header({ active, projActive }) {
+export default function Header({ active, projActive, CaptchaVariables }) {
   const [emailOpen, OpenEmail] = useState(false)
   const [showProjects, setShowProjects] = useState(false)
   const wrapperRef = useRef(null);
@@ -61,7 +61,7 @@ export default function Header({ active, projActive }) {
   return (
     <>
       <header className={styles.header}>
-        {emailOpen ? <Email CloseEmail={OpenEmail} /> : <></>}
+        {emailOpen ? <Email CloseEmail={OpenEmail} CaptchaVariables={CaptchaVariables} /> : <></>}
         <Link href="/" className={styles.Hero}>
           <Image
             alt="profile photo"

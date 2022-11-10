@@ -2,11 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { useState, useRef, useEffect } from 'react'
-import { keys } from './email.keys'
 import emailjs from '@emailjs/browser'
 import ReCAPTCHA from "react-google-recaptcha";
 
-export default function Email({ CloseEmail }) {
+export default function Email(props) {
     const refCaptcha = useRef();
     const [capStage, setCapStage] = useState(false)
 
@@ -16,6 +15,7 @@ export default function Email({ CloseEmail }) {
         message: '',
     })
 
+    const [keys, setKeys] = useState(props.CaptchaVariables);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -46,7 +46,7 @@ export default function Email({ CloseEmail }) {
       <>
         <div
           onClick={() => {
-            CloseEmail(false);
+            props.CloseEmail(false);
             setCapStage(false);
           }}
           className={styles.EmailModal}
@@ -64,7 +64,7 @@ export default function Email({ CloseEmail }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 onClick={() => {
-                  CloseEmail(false);
+                  props.CloseEmail(false);
                   setCapStage(false);
                 }}
               >

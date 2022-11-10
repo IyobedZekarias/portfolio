@@ -19,7 +19,10 @@ export default async function handler(req, res) {
 
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/rational", config);
+        const response = await fetch(
+          "https://numerical-portfolio-iz.herokuapp.com/rational",
+          config
+        );
 
         const json = await response.json()
         res.status(response.status).json(json);
