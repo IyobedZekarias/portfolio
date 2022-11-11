@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "../../styles/Home.module.css";
 import Header from "../../components/Header";
+import { useState } from "react";
 
 export function getStaticProps() {
   return {
@@ -18,6 +19,8 @@ export function getStaticProps() {
 }
 
 export default function Wooping(props) {
+  const [current, setCurrent] = useState();
+  const resetState = () => { }
   return (
     <div className={styles.container}>
       <Header
@@ -26,7 +29,26 @@ export default function Wooping(props) {
         CaptchaVariables={props.CaptchaVariables}
       />
 
-      <main className={styles.main}></main>
+      <main className={styles.main}>
+        <div
+          className={current == "MORE" ? styles.ANumerical : styles.Numerical}
+          onMouseEnter={() => {
+            if (current != "MORE") {
+              setCurrent("MORE");
+              resetState();
+            }
+          }}
+        >
+          <h1 className={styles.AboutTitle}>IMPLEMENTATION COMING SOON</h1>
+          <p className={styles.AboutParagraph}>
+            Currently working on getting the API endpoints finished
+          </p>
+          <Link className={styles.AboutParagraph} href="/Projects/numerical">
+            Click here to check out Numerical Project to see fully implemented
+            project
+          </Link>
+        </div>
+      </main>
 
       <footer className={styles.footer}>
         <a

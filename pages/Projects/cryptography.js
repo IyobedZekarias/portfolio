@@ -348,6 +348,27 @@ export default function Cryptography(props) {
             <></>
           )}
         </div>
+
+        <div
+          className={current == "MORE" ? styles.ANumerical : styles.Numerical}
+          onMouseEnter={() => {
+            if (current != "MORE") {
+              setCurrent("MORE");
+              resetState();
+            }
+          }}
+        >
+          <h1 className={styles.AboutTitle}>
+            MORE IMPLEMENTATIONS COMING SOON
+          </h1>
+          <p className={styles.AboutParagraph}>
+            Currently working on getting the API endpoints finished
+          </p>
+          <Link className={styles.AboutParagraph} href="/Projects/numerical">
+            Click here to check out Numerical Project to see fully implemented
+            project
+          </Link>
+        </div>
       </main>
 
       <footer className={styles.footer}>
