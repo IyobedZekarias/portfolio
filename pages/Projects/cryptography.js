@@ -9,7 +9,9 @@ export default function About() {
     <div className={styles.container}>
       <Header active="Projects" projActive="cryptography" />
 
-      <main className={styles.main}></main>
+      <main className={styles.main}>
+        <p>{"\ufffd\ufffd\u001b]l\ufffd۪\ufffdI\ufffd+9\u000e/"}</p>
+      </main>
 
       <footer className={styles.footer}>
         <a
