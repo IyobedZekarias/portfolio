@@ -4,10 +4,23 @@ import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 import Header from '../components/Header'
 
-export default function About() {
+export function getStaticProps() {
+  return {
+    props: {
+      CaptchaVariables: {
+        service: process.env.SERVICE,
+        template: process.env.TEMPLATE,
+        publicKey: process.env.PUBLICKEY,
+        captchKey: process.env.CAPTCHAKEY,
+      },
+    },
+  };
+}
+
+export default function About(props) {
     return (
       <div className={styles.container}>
-        <Header active="About" />
+        <Header active="About" CaptchaVariables={props.CaptchaVariables} />
 
         <main className={styles.main}>
           <h1 className={styles.AboutTitle}>Learn About Me</h1>

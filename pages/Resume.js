@@ -5,26 +5,30 @@ import { Document, Page, pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 import Header from '../components/Header'
 
+
 const options = {
   cMapUrl: "cmaps/",
   cMapPacked: true,
   standardFontDataUrl: "standard_fonts/",
 };
 
-export default function About({ isMobileView }) {
+export default function About(props) {
   const [file, setFile] = useState("Iyobed Zekarias Resume.pdf");
   const [numPages, setNumPages] = useState(null);
+
+  console.log(props.CaptchaVariables)
 
   function onDocumentLoadSuccess({ numPages: nextNumPages }) {
     setNumPages(nextNumPages);
   }
   return (
     <div className={styles.container}>
-      <Header active="Resume" />
+      <Header active="Resume" CaptchaVariables={props.CaptchaVariables} />
 
       <main className={styles.main}>
         <a className={styles.pdf} href={file} download>
-            Download as PDF <Image alt='' src='/download.svg' width={20} height={20} />
+          Download as PDF{" "}
+          <Image alt="" src="/download.svg" width={20} height={20} />
         </a>
         <Document
           file={file}
@@ -38,7 +42,7 @@ export default function About({ isMobileView }) {
             <Page
               key={`page_${index + 1}`}
               pageNumber={index + 1}
-              scale={isMobileView == true ? 0.58 : 1.0}
+              scale={props.isMobileView == true ? 0.65 : 1.0}
             />
           ))}
         </Document>
@@ -61,13 +65,37 @@ export default function About({ isMobileView }) {
 }
 
 
-About.getInitialProps = ( ctx ) => {
-  let isMobileView = (
-    ctx.req ? ctx.req.headers["user-agent"] : navigator.userAgent
-  ).match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i);
+// About.getInitialProps = ( ctx ) => {
+//   let isMobileView = (
+//     ctx.req ? ctx.req.headers["user-agent"] : navigator.userAgent
+//   ).match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i);
 
-  //Returning the isMobileView as a prop to the component for further use.
+//   //Returning the isMobileView as a prop to the component for further use.
+//   return {
+//     isMobileView: Boolean(isMobileView),
+//     CaptchaVariables: {
+//       service: process.env.SERVICE,
+//       template: process.env.TEMPLATE,
+//       publicKey: process.env.PUBLICKEY,
+//       captchKey: process.env.CAPTCHAKEY
+//     }
+//   };
+// }
+
+export function getStaticProps() {
+  // let isMobileView = (
+  //   ctx.req ? ctx.req.headers["user-agent"] : navigator.userAgent
+  // ).match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i);
+
   return {
-    isMobileView: Boolean(isMobileView),
+    props: {
+      CaptchaVariables: {
+        service: process.env.SERVICE,
+        template: process.env.TEMPLATE,
+        publicKey: process.env.PUBLICKEY,
+        captchKey: process.env.CAPTCHAKEY,
+      },
+      isMobileView: true,
+    },
   };
 }

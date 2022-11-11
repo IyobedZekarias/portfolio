@@ -7,7 +7,20 @@ import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import Header from '../components/Header'
 
-export default function Home() {
+export function getStaticProps() {
+  return {
+    props: {
+      CaptchaVariables: {
+        service: process.env.SERVICE,
+        template: process.env.TEMPLATE,
+        publicKey: process.env.PUBLICKEY,
+        captchKey: process.env.CAPTCHAKEY,
+      },
+    },
+  };
+}
+
+export default function Home(props) {
   const [toggle, setToggle] = useState(true);
   const options = {
     fullScreen: {
@@ -98,7 +111,7 @@ export default function Home() {
         <meta name="theme-color" content="#ffffff" />
       </Head>
 
-      <Header active="Home" />
+      <Header active="Home" CaptchaVariables={props.CaptchaVariables} />
 
       <main className={styles.main}>
         <div className={styles.Content}>
