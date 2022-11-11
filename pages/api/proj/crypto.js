@@ -16,7 +16,10 @@ export default async function handler(req, res) {
   };
 
   try {
-    const response = await fetch("http://localhost:18080/crypto", config);
+    const response = await fetch(
+      "https://cppapi-portfolio-iz.herokuapp.com/crypto",
+      config
+    );
 
     const json = await response.json();
     res.status(response.status).json(json);
