@@ -57,12 +57,11 @@ export default function Cryptography(props) {
       const json = await response.json();
       endLoads()
 
-      if (response.status == 405) {
+      if (response.status == 403) {
         alert(json["Message"]);
         return;
       }
       setAnswer(json)
-      setBody({})
     } catch (error) {
       alert(error);
     }
@@ -259,7 +258,7 @@ export default function Cryptography(props) {
                       type="text"
                       name="key"
                       placeholder="5I68BR+32Wpq1BiVWfv4Pw=="
-                      value={body["key"]}
+                      value={body["key"] == undefined ? '': body["key"]}
                       onFocus={handleFocus}
                       onChange={handleChange}
                     />
@@ -349,6 +348,116 @@ export default function Cryptography(props) {
           )}
         </div>
 
+        {/* SHA */}
+        <div
+          onMouseEnter={() => {
+            if (current != "SHA") {
+              setCurrent("SHA");
+              resetState();
+            }
+          }}
+          className={current == "SHA" ? styles.ANumerical : styles.Numerical}
+        >
+          <h1 className={styles.AboutTitle}>SHA Encoding</h1>
+          {current == "SHA" ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <form className={styles.ModalForm}>
+                <label
+                  className={styles.ModalName}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                  }}
+                >
+                  Plain Text To Encode
+                  <textarea
+                    className={styles.ModalInput}
+                    type="text"
+                    name="plain"
+                    placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam nulla porttitor massa id. Platea dictumst vestibulum rhoncus est pellentesque. Mattis molestie a iaculis at erat pellentesque adipiscing commodo elit."
+                    cols={70}
+                    rows={6}
+                    style={{ resize: "none" }}
+                    value={body["plain"]}
+                    onFocus={handleFocus}
+                    onChange={handleChange}
+                  />
+                  Enter SHA Level from 100 to 512
+                  <input
+                    className={styles.ModalInput}
+                    type="text"
+                    name="t"
+                    placeholder="512"
+                    value={body["t"] == undefined ? "" : body["t"]}
+                    onFocus={handleFocus}
+                    onChange={handleChange}
+                  />
+                </label>
+                <button
+                  className={styles.ModalSubmit}
+                  type="button"
+                  value="Submit"
+                  onClick={(e) => {
+                    const submit = {
+                      ...body,
+                      function: "sha",
+                    };
+                    setL2(true);
+                    handleAPIcall(e, submit);
+                    set2(true);
+                  }}
+                >
+                  Run Encoding
+                </button>
+              </form>
+              {level2 ? (
+                <div
+                  className={styles.Matrix}
+                  style={{
+                    display: "flex",
+                    maxWidth: "80%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {load2 ? (
+                    <>
+                      <Image
+                        src="/RippleLoad.svg"
+                        alt="Loading Logo"
+                        width={100}
+                        height={100}
+                      />
+                    </>
+                  ) : (
+                    <div
+                      className={styles.matrixTot}
+                      style={{ maxWidth: "100%", overflowWrap: "anywhere" }}
+                    >
+                      <p className={styles.matrixVal}>Your Encoded Text</p>
+                      <p className={styles.matrixVal}>{answer["hash"]}</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        {/* MORE */}
         <div
           className={current == "MORE" ? styles.ANumerical : styles.Numerical}
           onMouseEnter={() => {
