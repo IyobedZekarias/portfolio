@@ -223,25 +223,15 @@ export default function Cryptography(props) {
                       if (re.test(e.target.value)) handleChange(e);
                     }}
                   />
-                </label>
-                <button
-                  className={styles.ModalSubmit}
-                  type="button"
-                  value="Submit"
-                  name="a"
-                  onClick={(e) => handleNNIrand(e, 100)}
-                >
-                  Generate a
-                </button>
-                <label
-                  className={styles.ModalName}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                  }}
-                >
+                  <button
+                    className={styles.ModalSubmit}
+                    type="button"
+                    value="Submit"
+                    name="a"
+                    onClick={(e) => handleNNIrand(e, 100)}
+                  >
+                    Generate a
+                  </button>
                   <textarea
                     className={styles.ModalInput}
                     type="text"
@@ -254,16 +244,16 @@ export default function Cryptography(props) {
                       if (re.test(e.target.value)) handleChange(e);
                     }}
                   />
+                  <button
+                    className={styles.ModalSubmit}
+                    type="button"
+                    value="Submit"
+                    name="b"
+                    onClick={(e) => handleNNIrand(e, 85)}
+                  >
+                    Generate b
+                  </button>
                 </label>
-                <button
-                  className={styles.ModalSubmit}
-                  type="button"
-                  value="Submit"
-                  name="b"
-                  onClick={(e) => handleNNIrand(e, 85)}
-                >
-                  Generate b
-                </button>
 
                 {"a" in body &&
                 body["a"] != "" &&
