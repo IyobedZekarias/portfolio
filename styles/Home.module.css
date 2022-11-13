@@ -72,8 +72,9 @@
 }
 
 .ANumerical textarea {
-  width: 100%; 
+  width: 65vw; 
   height: 20vh;
+  transition-duration: 300ms;
 }
 
 .ANumerical *, .Numerical * {
