@@ -545,6 +545,9 @@
       height: auto;
     }
   }
+  .ANumerical, .Numerical{
+    padding: 12px;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
