@@ -27,6 +27,7 @@ export default function Cryptography(props) {
   const [level3, set3] = useState(false)
   const [load3, setL3] = useState(false)
   const [answer, setAnswer] = useState({});
+  const [modExp, setmodExp] = useState(false)
 
   const endLoads = () => {
     setL2(false)
@@ -39,9 +40,11 @@ export default function Cryptography(props) {
     set3(false)
     setAnswer({});
     endLoads()
+    setmodExp(false)
   };
 
   const handleAPIcall = async (e, submit) => {
+    console.log(submit)
     const config = {
       method: "POST",
       headers: {
@@ -66,6 +69,38 @@ export default function Cryptography(props) {
       alert(error);
     }
   };
+
+  const handleNNIrand = async (e, size) => {
+    if(e.target.name != "e") setmodExp(false)
+    const obj = {
+      function: "nni", 
+      op: "rand", 
+      size: size
+    }
+
+    const config = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    };
+    try {
+      setBody({...body, [e.target.name]: "Loading"})
+      const response = await fetch("/api/proj/crypto", config);
+      
+      const json = await response.json();
+
+      if (response.status == 403) {
+        alert(json["Message"]);
+        return;
+      }
+      setBody({...body, [e.target.name]: json["ans"]})
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   const handleFocus = (e) => {
     if(!(e.target.name in body)) setBody({ ...body, [e.target.name]: "" });
@@ -141,6 +176,297 @@ export default function Cryptography(props) {
             </a>
             .
           </p>
+        </div>
+
+        {/* NNI */}
+        <div
+          onMouseEnter={() => {
+            if (current != "NNI") {
+              setCurrent("NNI");
+              resetState();
+            }
+          }}
+          className={current == "NNI" ? styles.ANumerical : styles.Numerical}
+        >
+          <h1 className={styles.AboutTitle}>
+            Multiprecision Non Negative Integers
+          </h1>
+          {current == "NNI" ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <form className={styles.ModalForm}>
+                <label
+                  className={styles.ModalName}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                  }}
+                >
+                  Enter two very big numbers or generate a random ones
+                  <textarea
+                    className={styles.ModalInput}
+                    type="text"
+                    name="a"
+                    placeholder="203628331141104498555696721217956672687032336458202513544840206364338423529007609885075294830182683290567422018990753787543433642599771621545489102980293721128786695716193327892688817866015865827680088291194655207328329511794890588331141104498555696721217956672687032336458202513544840206364338423529007609885075294830182683290567422018990753787543433642599771621584235290076098850752948301826832905674220189907537875434336425997716215454891029802937211287866957161933278926888178660158658276800882911946552073283295117948905883311411044985556943384235290076098850752948301826832905674220189907537875434336425997716215454891029802937211287866957161933278926888178660158658276800882911946552073283295117948905883311411044985556967212179566726870323364582025135448402063643384235290076098850752948301826832905674220189907537875434336425997716215842352900760988507529483018268329056742201899075378754343364259977162154548910298029372112878669571619332789268881786601"
+                    cols={70}
+                    rows={6}
+                    style={{ resize: "none" }}
+                    value={body["a"]}
+                    onFocus={handleFocus}
+                    onChange={(e) => {
+                      const re = /^[0-9\b]*$/;
+                      if (re.test(e.target.value)) handleChange(e);
+                    }}
+                  />
+                </label>
+                <button
+                  className={styles.ModalSubmit}
+                  type="button"
+                  value="Submit"
+                  name="a"
+                  onClick={(e) => handleNNIrand(e, 100)}
+                >
+                  Generate a
+                </button>
+                <textarea
+                  className={styles.ModalInput}
+                  type="text"
+                  name="b"
+                  placeholder="203628331141104498555696721217956672687032336458202513544840206364338423529007609885075294830182683290567422018990753787543433642599771621545489102980293721128786695716193327892688817866015865827680088291194655207328329511794890588331141104498555696721217956672687032336458202513544840206364338423529007609885075294830182683290567422018990753787543433642599771621584235290076098850752948301826832905674220189907537875434336425997716215454891029802937211287866957161933278926888178660158658276800882911946552073283295117948905883311411044985556943384235290076098850752948301826832905674220189907537875434336425997716215454891029802937211287866957161933278926888178660158658276800882911946552073283295117948905883311411044985556967212179566726870323364582025135448402063643384235290076098850752948301826832905674220189907537875434336425997716215842352900760988507529483018268329056742201899075378754343364259977162154548910298029372112878669571619332789268881786601"
+                  cols={70}
+                  rows={6}
+                  style={{ resize: "none" }}
+                  value={body["b"]}
+                  onFocus={handleFocus}
+                  onChange={(e) => {
+                    const re = /^[0-9\b]*$/;
+                    if (re.test(e.target.value)) handleChange(e);
+                  }}
+                />
+                <button
+                  className={styles.ModalSubmit}
+                  type="button"
+                  value="Submit"
+                  name="b"
+                  onClick={(e) => handleNNIrand(e, 85)}
+                >
+                  Generate b
+                </button>
+
+                {"a" in body &&
+                body["a"] != "" &&
+                "b" in body &&
+                body["b"] != "" ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <button
+                      className={styles.ModalSubmit}
+                      type="button"
+                      value="Submit"
+                      onClick={(e) => {
+                        const submit = {
+                          ...body,
+                          function: "nni",
+                          op: "add",
+                        };
+                        setmodExp(false);
+                        setL2(true);
+                        handleAPIcall(e, submit);
+                        set2(true);
+                      }}
+                    >
+                      a + b
+                    </button>
+                    <button
+                      className={styles.ModalSubmit}
+                      type="button"
+                      value="Submit"
+                      onClick={(e) => {
+                        const submit = {
+                          ...body,
+                          function: "nni",
+                          op: "sub",
+                        };
+                        setmodExp(false);
+                        setL2(true);
+                        handleAPIcall(e, submit);
+                        set2(true);
+                      }}
+                    >
+                      a - b
+                    </button>
+                    <button
+                      className={styles.ModalSubmit}
+                      type="button"
+                      value="Submit"
+                      onClick={(e) => {
+                        const submit = {
+                          ...body,
+                          function: "nni",
+                          op: "mul",
+                        };
+                        setmodExp(false);
+                        setL2(true);
+                        handleAPIcall(e, submit);
+                        set2(true);
+                      }}
+                    >
+                      a * b
+                    </button>
+                    <button
+                      className={styles.ModalSubmit}
+                      type="button"
+                      value="Submit"
+                      onClick={(e) => {
+                        const submit = {
+                          ...body,
+                          function: "nni",
+                          op: "div",
+                        };
+                        setL2(true);
+                        handleAPIcall(e, submit);
+                        set2(true);
+                      }}
+                    >
+                      a / b
+                    </button>
+                    <button
+                      className={styles.ModalSubmit}
+                      type="button"
+                      value="Submit"
+                      onClick={(e) => {
+                        const submit = {
+                          ...body,
+                          function: "nni",
+                          op: "mod",
+                        };
+                        setmodExp(false);
+                        setL2(true);
+                        handleAPIcall(e, submit);
+                        set2(true);
+                      }}
+                    >
+                      a mod b
+                    </button>
+                    <button
+                      className={styles.ModalSubmit}
+                      type="button"
+                      value="Submit"
+                      onClick={(e) => {
+                        setmodExp(!modExp);
+                      }}
+                    >
+                      a ^ e mod b
+                    </button>
+                  </div>
+                ) : (
+                  <></>
+                )}
+                {modExp ? (
+                  <label
+                    className={styles.ModalName}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    Enter e
+                    <textarea
+                      className={styles.ModalInput}
+                      type="text"
+                      name="a"
+                      placeholder="203628331141104498555696721217956672687032336458202513544840206364338423529007609885075294830182683290567422018990753787543433642599771621545489102980293721128786695716193327892688817866015865827680088291194655207328329511794890588331141104498555696721217956672687032336458202513544840206364338423529007609885075294830182683290567422018990753787543433642599771621584235290076098850752948301826832905674220189907537875434336425997716215454891029802937211287866957161933278926888178660158658276800882911946552073283295117948905883311411044985556943384235290076098850752948301826832905674220189907537875434336425997716215454891029802937211287866957161933278926888178660158658276800882911946552073283295117948905883311411044985556967212179566726870323364582025135448402063643384235290076098850752948301826832905674220189907537875434336425997716215842352900760988507529483018268329056742201899075378754343364259977162154548910298029372112878669571619332789268881786601"
+                      cols={70}
+                      rows={6}
+                      style={{ resize: "none" }}
+                      value={body["e"]}
+                      onFocus={handleFocus}
+                      onChange={(e) => {
+                        const re = /^[0-9\b]*$/;
+                        if (re.test(e.target.value)) handleChange(e);
+                      }}
+                    />
+                    <button
+                      className={styles.ModalSubmit}
+                      type="button"
+                      value="Submit"
+                      name="e"
+                      onClick={(e) => handleNNIrand(e, 100)}
+                    >
+                      Generate e
+                    </button>
+                    <button
+                      className={styles.ModalSubmit}
+                      type="button"
+                      value="Submit"
+                      onClick={(e) => {
+                        const submit = {
+                          ...body,
+                          function: "nni",
+                          op: "modexp",
+                        };
+                        setL2(true);
+                        handleAPIcall(e, submit);
+                        set2(true);
+                      }}
+                    >
+                      a ^ e mod b
+                    </button>
+                  </label>
+                ) : (
+                  <></>
+                )}
+              </form>
+              {level2 ? (
+                <div
+                  className={styles.Matrix}
+                  style={{
+                    display: "flex",
+                    maxWidth: "80%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {load2 ? (
+                    <>
+                      <Image
+                        src="/RippleLoad.svg"
+                        alt="Loading Logo"
+                        width={100}
+                        height={100}
+                      />
+                    </>
+                  ) : (
+                    <div
+                      className={styles.matrixTot}
+                      style={{ maxWidth: "100%", overflowWrap: "anywhere" }}
+                    >
+                      <p className={styles.matrixVal}>{answer["ans"]}</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
 
         {/* AES */}
@@ -258,7 +584,7 @@ export default function Cryptography(props) {
                       type="text"
                       name="key"
                       placeholder="5I68BR+32Wpq1BiVWfv4Pw=="
-                      value={body["key"] == undefined ? '': body["key"]}
+                      value={body["key"] == undefined ? "" : body["key"]}
                       onFocus={handleFocus}
                       onChange={handleChange}
                     />
