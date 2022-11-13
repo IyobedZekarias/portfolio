@@ -230,7 +230,7 @@ export default function Cryptography(props) {
                     name="a"
                     onClick={(e) => handleNNIrand(e, 100)}
                   >
-                    Generate a
+                    Generate x
                   </button>
                   <textarea
                     className={styles.ModalInput}
@@ -251,7 +251,7 @@ export default function Cryptography(props) {
                     name="b"
                     onClick={(e) => handleNNIrand(e, 85)}
                   >
-                    Generate b
+                    Generate y
                   </button>
                 </label>
 
@@ -282,7 +282,7 @@ export default function Cryptography(props) {
                         set2(true);
                       }}
                     >
-                      a + b
+                      x + y
                     </button>
                     <button
                       className={styles.ModalSubmit}
@@ -300,7 +300,7 @@ export default function Cryptography(props) {
                         set2(true);
                       }}
                     >
-                      a - b
+                      x - y
                     </button>
                     <button
                       className={styles.ModalSubmit}
@@ -318,7 +318,7 @@ export default function Cryptography(props) {
                         set2(true);
                       }}
                     >
-                      a * b
+                      x * y
                     </button>
                     <button
                       className={styles.ModalSubmit}
@@ -335,7 +335,7 @@ export default function Cryptography(props) {
                         set2(true);
                       }}
                     >
-                      a / b
+                      x / y
                     </button>
                     <button
                       className={styles.ModalSubmit}
@@ -353,7 +353,7 @@ export default function Cryptography(props) {
                         set2(true);
                       }}
                     >
-                      a mod b
+                      x mod y
                     </button>
                     <button
                       className={styles.ModalSubmit}
@@ -363,7 +363,7 @@ export default function Cryptography(props) {
                         setmodExp(!modExp);
                       }}
                     >
-                      a ^ e mod b
+                      x ^ e mod y
                     </button>
                   </div>
                 ) : (
@@ -416,7 +416,7 @@ export default function Cryptography(props) {
                         set2(true);
                       }}
                     >
-                      a ^ e mod b
+                      Calculate
                     </button>
                   </label>
                 ) : (
