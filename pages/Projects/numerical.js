@@ -66,7 +66,7 @@ const exampleEquations = (
 
 
 export default function Numerical(props) {
-    const [current, setCurrent] = useState('Description')
+    const [current, setCurrent] = useState(['Description'])
   // -------- INTERPOLATION/extrapolation VALUES -------- //
     const [interpVarCount, setInterpVarCount] = useState(20)
     const [interpVals, setInterpVals] = useState({
@@ -84,7 +84,7 @@ export default function Numerical(props) {
     const [extrapFunction, setExtrapFunction] = useState('')
     const [extrapAnswer, setExtrapAnswer] = useState({})
     const [extrapFin, setExtrapFin] = useState(false)
-    
+    const [currentie, setCurrentie] = useState("")
 
   // -------- MATRIX STATE VALUES -------- //
     const initial = {
@@ -117,51 +117,51 @@ export default function Numerical(props) {
 
 
 
-    const resetState = () => {
-        if (current == 'Gauss') {
-            setMatrixVals(initial)
-            setShowMatrix(false)
-            setMatrix([])
-            setGaus({})
-            setGausTrue(false)
-        }
-        if (current.includes('Interp') || current.includes('Extrap')) {
-            setInterpVarCount(20)
-            setInterpVals({
-                x: [[],[]], 
-                y: [[],[]]
-            })
-            setDoneInterpVals(false)
-            setxValue({
-              num: 32434,
-              den: 23452,
-            });
-            setInterpAnswer({})
-            setInterpFin(false)
-            setExtrapValFin(false)
-            setExtrapFunction('')
-            setExtrapAnswer({})
-            setExtrapFin(false)
-        }
-        if (current == 'Monte') {
-            setMonteCarloNum(1)
-            setMCNumFin(false)
-            setMCVars([''])
-            setMCFormStg(false)
-            setMCForm('')
-            setMCBoundsStg(false)
-            setMCBounds([[]])
-            setMCFin(false)
-            setMCAns({})
-        }
-        if (current == 'Int') {
-            setIntFunc('')
-            setIntFuncFin(false)
-            setIntBounds({ upper: 1, lower: 0 })
-            setIntAns({})
-            setIntFin(false)
-        }
-    }
+    // const resetState = () => {
+    //     if (current == 'Gauss') {
+    //         setMatrixVals(initial)
+    //         setShowMatrix(false)
+    //         setMatrix([])
+    //         setGaus({})
+    //         setGausTrue(false)
+    //     }
+    //     if (current.includes('Interp') || current.includes('Extrap')) {
+    //         setInterpVarCount(20)
+    //         setInterpVals({
+    //             x: [[],[]], 
+    //             y: [[],[]]
+    //         })
+    //         setDoneInterpVals(false)
+    //         setxValue({
+    //           num: 32434,
+    //           den: 23452,
+    //         });
+    //         setInterpAnswer({})
+    //         setInterpFin(false)
+    //         setExtrapValFin(false)
+    //         setExtrapFunction('')
+    //         setExtrapAnswer({})
+    //         setExtrapFin(false)
+    //     }
+    //     if (current == 'Monte') {
+    //         setMonteCarloNum(1)
+    //         setMCNumFin(false)
+    //         setMCVars([''])
+    //         setMCFormStg(false)
+    //         setMCForm('')
+    //         setMCBoundsStg(false)
+    //         setMCBounds([[]])
+    //         setMCFin(false)
+    //         setMCAns({})
+    //     }
+    //     if (current == 'Int') {
+    //         setIntFunc('')
+    //         setIntFuncFin(false)
+    //         setIntBounds({ upper: 1, lower: 0 })
+    //         setIntAns({})
+    //         setIntFin(false)
+    //     }
+    // }
 
     const handleInterpSubmit = () => {
         let xnum = [], ynum = [], xden = [], yden = []
@@ -300,13 +300,11 @@ export default function Numerical(props) {
           {/* INTRO */}
           <div
             className={
-              current == "Description" ? styles.ANumerical : styles.Numerical
+              current.at(current.length - 1) == "Description" ? styles.ANumerical : styles.Numerical
             }
             onMouseEnter={() => {
-              if (current != "Description") {
-                setCurrent("Description");
-                resetState();
-              }
+              setCurrent([...current, "Description"]);
+                
             }}
           >
             <h1 className={styles.AboutTitle}>Numerical Analysis</h1>
@@ -350,17 +348,14 @@ export default function Numerical(props) {
           {/* GAUSSIAN ELIMINATION*/}
           <div
             onMouseEnter={() => {
-              if (current != "Gauss") {
-                setCurrent("Gauss");
-                resetState();
-              }
+                setCurrent([...current, "Gauss"]);
             }}
             className={
-              current == "Gauss" ? styles.ANumerical : styles.Numerical
+              current.at(current.length - 1) == "Gauss" ? styles.ANumerical : styles.Numerical
             }
           >
             <h1 className={styles.AboutTitle}>Gaussian Elimination</h1>
-            {current == "Gauss" ? (
+            {current.includes("Gauss") ? (
               <div
                 style={{
                   display: "flex",
@@ -582,19 +577,16 @@ export default function Numerical(props) {
           {/* INTERP/EXTRAP */}
           <div
             onMouseEnter={() => {
-              if (!current.includes("Interp") && !current.includes("Extrap")) {
-                setCurrent("Interp/Extrap");
-                resetState();
-              }
+                setCurrent([...current, "Interp/Extrap"]);
             }}
             className={
-              current.includes("Inter") || current.includes("Extrap")
+              current.at(current.length - 1) == "Interp/Extrap"
                 ? styles.ANumerical
                 : styles.Numerical
             }
           >
             <h1 className={styles.AboutTitle}>Interpolation / Extrapolation</h1>
-            {current.includes("Inter") || current.includes("Extrap") ? (
+            {current.includes("Interp/Extrap")? (
               <div
                 style={{
                   display: "flex",
@@ -609,8 +601,8 @@ export default function Numerical(props) {
                   type="button"
                   value="Submit"
                   onClick={() => {
-                    setCurrent("Interp");
-                    resetState();
+                    setCurrentie("Interp")
+                    
                   }}
                 >
                   Interpolation
@@ -620,8 +612,8 @@ export default function Numerical(props) {
                   type="button"
                   value="Submit"
                   onClick={() => {
-                    setCurrent("Extrap");
-                    resetState();
+                    setCurrentie("Extrap")
+                    
                   }}
                 >
                   Extrapolation
@@ -630,7 +622,7 @@ export default function Numerical(props) {
             ) : (
               <></>
             )}
-            {current == "Interp" ? (
+            {currentie == "Interp" ? (
               <div
                 style={{
                   display: "flex",
@@ -886,7 +878,7 @@ export default function Numerical(props) {
             ) : (
               <></>
             )}
-            {current == "Extrap" ? (
+            {currentie == "Extrap" ? (
               <div
                 style={{
                   display: "flex",
@@ -1099,17 +1091,14 @@ export default function Numerical(props) {
           {/* MONTE CARLO INTEGRATION */}
           <div
             onMouseEnter={() => {
-              if (!current.includes("Monte")) {
-                setCurrent("Monte");
-                resetState();
-              }
+                setCurrent([...current, "Monte"]);
             }}
             className={
-              current == "Monte" ? styles.ANumerical : styles.Numerical
+              current.at(current.length - 1) == "Monte" ? styles.ANumerical : styles.Numerical
             }
           >
             <h1 className={styles.AboutTitle}>Monte Carlo Integration</h1>
-            {current == "Monte" ? (
+            {current.includes("Monte") ? (
               <div
                 style={{
                   display: "flex",
@@ -1555,15 +1544,12 @@ export default function Numerical(props) {
           {/* INTEGRATION */}
           <div
             onMouseEnter={() => {
-              if (current != "Int") {
-                setCurrent("Int");
-                resetState();
-              }
+                setCurrent([...current, "Int"]);
             }}
-            className={current == "Int" ? styles.ANumerical : styles.Numerical}
+            className={current.at(current.length - 1) == "Int" ? styles.ANumerical : styles.Numerical}
           >
             <h1 className={styles.AboutTitle}>Integration</h1>
-            {current == "Int" ? (
+            {current.includes("Int") ? (
               <div
                 style={{
                   display: "flex",
@@ -1572,7 +1558,7 @@ export default function Numerical(props) {
                   flexDirection: "column",
                 }}
               >
-                {current == "Int" ? (
+                {current.includes("Int") ? (
                   <div style={{ marginTop: "20px" }}>
                     <form className={styles.ModalForm}>
                       <p>Enter f(x) to Integrate</p>

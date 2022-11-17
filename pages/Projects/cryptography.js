@@ -20,27 +20,37 @@ export function getStaticProps() {
 
 export default function Cryptography(props) {
   
-  const [current, setCurrent] = useState();
+  const [current, setCurrent] = useState(["Description"]);
   const [body, setBody] = useState({});
-  const [level2, set2] = useState(false);
-  const [load2, setL2] = useState(false)
-  const [level3, set3] = useState(false)
-  const [load3, setL3] = useState(false)
-  const [answer, setAnswer] = useState({});
+
+  
+  const [nnilevel2, setnni2] = useState(false);
+  const [nniload2, setLnni2] = useState(false);
+
+  const [aeslevel2, setaes2] = useState(false);
+  const [aesload2, setLaes2] = useState(false);
+  const [aeslevel3, setaes3] = useState(false);
+  const [aesload3, setLaes3] = useState(false);
+
+  const [shalevel2, setsha2] = useState(false);
+  const [shaload2, setLsha2] = useState(false);
+
+
+  const [nnianswer, setnniAnswer] = useState({});
+  const [aesanswer, setaesAnswer] = useState({});
+  const [shaanswer, setshaAnswer] = useState({});
+
   const [modExp, setmodExp] = useState(false)
 
   const endLoads = () => {
-    setL2(false)
-    setL3(false)
+    setLnni2(false);
+    setLaes2(false);
+    setLaes3(false);
+    setLsha2(false);
   }
 
   const resetState = () => {
     setBody({});
-    set2(false);
-    set3(false)
-    setAnswer({});
-    endLoads()
-    setmodExp(false)
   };
 
   const handleAPIcall = async (e, submit) => {
@@ -64,7 +74,14 @@ export default function Cryptography(props) {
         alert(json["Message"]);
         return;
       }
-      setAnswer(json)
+      if(submit["function"] == "aes")
+        setaesAnswer(json)
+      else if (submit["function"] == "nni")
+        setnniAnswer(json)
+      else if (submit["function"] == "sha")
+        setshaAnswer(json)
+      
+      setBody({shaplain:body["shaplain"], aesplain:body["aesplain"]})
     } catch (error) {
       alert(error);
     }
@@ -121,13 +138,11 @@ export default function Cryptography(props) {
         {/* DESCRIPTION */}
         <div
           className={
-            current == "Description" ? styles.ANumerical : styles.Numerical
+            current.at(current.length - 1).includes("Description") ? styles.ANumerical : styles.Numerical
           }
           onMouseEnter={() => {
-            if (current != "Description") {
-              setCurrent("Description");
-              resetState();
-            }
+              setCurrent([...current, "Description"]);
+              
           }}
         >
           <h1 className={styles.AboutTitle}>Cryptography</h1>
@@ -181,17 +196,15 @@ export default function Cryptography(props) {
         {/* NNI */}
         <div
           onMouseEnter={() => {
-            if (current != "NNI") {
-              setCurrent("NNI");
-              resetState();
-            }
+              setCurrent([...current, "NNI"]);
+              
           }}
-          className={current == "NNI" ? styles.ANumerical : styles.Numerical}
+          className={current.at(current.length - 1).includes("NNI") ? styles.ANumerical : styles.Numerical}
         >
           <h1 className={styles.AboutTitle}>
             Multiprecision Non Negative Integers
           </h1>
-          {current == "NNI" ? (
+          {current.includes("NNI") ? (
             <div
               style={{
                 display: "flex",
@@ -277,9 +290,9 @@ export default function Cryptography(props) {
                           op: "add",
                         };
                         setmodExp(false);
-                        setL2(true);
+                        setLnni2(true);
                         handleAPIcall(e, submit);
-                        set2(true);
+                        setnni2(true);
                       }}
                     >
                       x + y
@@ -295,9 +308,9 @@ export default function Cryptography(props) {
                           op: "sub",
                         };
                         setmodExp(false);
-                        setL2(true);
+                        setLnni2(true);
                         handleAPIcall(e, submit);
-                        set2(true);
+                        setnni2(true);
                       }}
                     >
                       x - y
@@ -313,9 +326,9 @@ export default function Cryptography(props) {
                           op: "mul",
                         };
                         setmodExp(false);
-                        setL2(true);
+                        setLnni2(true);
                         handleAPIcall(e, submit);
-                        set2(true);
+                        setnni2(true);
                       }}
                     >
                       x * y
@@ -330,9 +343,9 @@ export default function Cryptography(props) {
                           function: "nni",
                           op: "div",
                         };
-                        setL2(true);
+                        setLnni2(true);
                         handleAPIcall(e, submit);
-                        set2(true);
+                        setnni2(true);
                       }}
                     >
                       x / y
@@ -348,9 +361,9 @@ export default function Cryptography(props) {
                           op: "mod",
                         };
                         setmodExp(false);
-                        setL2(true);
+                        setLnni2(true);
                         handleAPIcall(e, submit);
-                        set2(true);
+                        setnni2(true);
                       }}
                     >
                       x mod y
@@ -411,9 +424,9 @@ export default function Cryptography(props) {
                           function: "nni",
                           op: "modexp",
                         };
-                        setL2(true);
+                        setLnni2(true);
                         handleAPIcall(e, submit);
-                        set2(true);
+                        setnni2(true);
                       }}
                     >
                       Calculate
@@ -423,7 +436,7 @@ export default function Cryptography(props) {
                   <></>
                 )}
               </form>
-              {level2 ? (
+              {nnilevel2 ? (
                 <div
                   className={styles.Matrix}
                   style={{
@@ -433,7 +446,7 @@ export default function Cryptography(props) {
                     alignItems: "center",
                   }}
                 >
-                  {load2 ? (
+                  {nniload2 ? (
                     <>
                       <Image
                         src="/RippleLoad.svg"
@@ -447,7 +460,7 @@ export default function Cryptography(props) {
                       className={styles.matrixTot}
                       style={{ maxWidth: "100%", overflowWrap: "anywhere" }}
                     >
-                      <p className={styles.matrixVal}>{answer["ans"]}</p>
+                      <p className={styles.matrixVal}>{nnianswer["ans"]}</p>
                     </div>
                   )}
                 </div>
@@ -463,15 +476,13 @@ export default function Cryptography(props) {
         {/* AES */}
         <div
           onMouseEnter={() => {
-            if (current != "AES") {
-              setCurrent("AES");
-              resetState();
-            }
+              setCurrent([...current, "AES"]);
+              
           }}
-          className={current == "AES" ? styles.ANumerical : styles.Numerical}
+          className={current.at(current.length -1).includes("AES") ? styles.ANumerical : styles.Numerical}
         >
           <h1 className={styles.AboutTitle}>AES Cipher</h1>
-          {current == "AES" ? (
+          {current.includes("AES") ? (
             <div
               style={{
                 display: "flex",
@@ -494,9 +505,9 @@ export default function Cryptography(props) {
                   <textarea
                     className={styles.ModalInput}
                     type="text"
-                    name="plain"
+                    name="aesplain"
                     placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam nulla porttitor massa id. Platea dictumst vestibulum rhoncus est pellentesque. Mattis molestie a iaculis at erat pellentesque adipiscing commodo elit."
-                    value={body["plain"]}
+                    value={body["aesplain"]}
                     onFocus={handleFocus}
                     onChange={handleChange}
                   />
@@ -506,20 +517,23 @@ export default function Cryptography(props) {
                   type="button"
                   value="Submit"
                   onClick={(e) => {
+                    let plain = body["aesplain"]
                     const submit = {
                       ...body,
+                      plain: body["aesplain"],
                       direction: "encode",
                       function: "aes",
                     };
-                    setL2(true);
+                    setLaes2(true);
                     handleAPIcall(e, submit);
-                    set2(true);
+                    setaes2(true);
+                    setBody({...body, key:""})
                   }}
                 >
                   Run Encoding
                 </button>
               </form>
-              {level2 ? (
+              {aeslevel2 ? (
                 <div
                   className={styles.Matrix}
                   style={{
@@ -529,7 +543,7 @@ export default function Cryptography(props) {
                     alignItems: "center",
                   }}
                 >
-                  {load2 ? (
+                  {aesload2 ? (
                     <>
                       <Image
                         src="/RippleLoad.svg"
@@ -544,17 +558,17 @@ export default function Cryptography(props) {
                       style={{ maxWidth: "100%", overflowWrap: "anywhere" }}
                     >
                       <p className={styles.matrixVal}>Your key</p>
-                      <p className={styles.matrixVal}>{answer["key"]}</p>
+                      <p className={styles.matrixVal}>{aesanswer["key"]}</p>
                       <br />
                       <p className={styles.matrixVal}>Your encoded cipher</p>
-                      <p className={styles.matrixVal}>{answer["cipher"]}</p>
+                      <p className={styles.matrixVal}>{aesanswer["cipher"]}</p>
                     </div>
                   )}
                 </div>
               ) : (
                 <></>
               )}
-              {level2 && !load2 ? (
+              {aeslevel2 && !aesload2 ? (
                 <form className={styles.ModalForm}>
                   <label
                     className={styles.ModalName}
@@ -607,9 +621,9 @@ export default function Cryptography(props) {
                         direction: "decode",
                         function: "aes",
                       };
-                      setL3(true);
+                      setLaes3(true);
                       handleAPIcall(e, submit);
-                      set3(true);
+                      setaes3(true);
                     }}
                   >
                     Run Decoding
@@ -618,7 +632,7 @@ export default function Cryptography(props) {
               ) : (
                 <></>
               )}
-              {level3 ? (
+              {aeslevel3 ? (
                 <div
                   className={styles.Matrix}
                   style={{
@@ -628,7 +642,7 @@ export default function Cryptography(props) {
                     alignItems: "center",
                   }}
                 >
-                  {load3 ? (
+                  {aesload3 ? (
                     <>
                       <Image
                         src="/RippleLoad.svg"
@@ -643,10 +657,10 @@ export default function Cryptography(props) {
                       style={{ maxWidth: "100%", overflowWrap: "anywhere" }}
                     >
                       <p className={styles.matrixVal}>Your key</p>
-                      <p className={styles.matrixVal}>{answer["key"]}</p>
+                      <p className={styles.matrixVal}>{aesanswer["key"]}</p>
                       <br />
                       <p className={styles.matrixVal}>Your decoded plaintext</p>
-                      <p className={styles.matrixVal}>{answer["plain"]}</p>
+                      <p className={styles.matrixVal}>{aesanswer["plain"]}</p>
                     </div>
                   )}
                 </div>
@@ -662,15 +676,13 @@ export default function Cryptography(props) {
         {/* SHA */}
         <div
           onMouseEnter={() => {
-            if (current != "SHA") {
-              setCurrent("SHA");
-              resetState();
-            }
+              setCurrent([...current, "SHA"]);
+              
           }}
-          className={current == "SHA" ? styles.ANumerical : styles.Numerical}
+          className={current.at(current.length - 1) == "SHA" ? styles.ANumerical : styles.Numerical}
         >
           <h1 className={styles.AboutTitle}>SHA Encoding</h1>
-          {current == "SHA" ? (
+          {current.includes("SHA") ? (
             <div
               style={{
                 display: "flex",
@@ -693,9 +705,9 @@ export default function Cryptography(props) {
                   <textarea
                     className={styles.ModalInput}
                     type="text"
-                    name="plain"
+                    name="shaplain"
                     placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam nulla porttitor massa id. Platea dictumst vestibulum rhoncus est pellentesque. Mattis molestie a iaculis at erat pellentesque adipiscing commodo elit."
-                    value={body["plain"]}
+                    value={body["shaplain"]}
                     onFocus={handleFocus}
                     onChange={handleChange}
                   />
@@ -717,17 +729,18 @@ export default function Cryptography(props) {
                   onClick={(e) => {
                     const submit = {
                       ...body,
+                      plain: body["shaplain"],
                       function: "sha",
                     };
-                    setL2(true);
+                    setLsha2(true);
                     handleAPIcall(e, submit);
-                    set2(true);
+                    setsha2(true);
                   }}
                 >
                   Run Encoding
                 </button>
               </form>
-              {level2 ? (
+              {shalevel2 ? (
                 <div
                   className={styles.Matrix}
                   style={{
@@ -737,7 +750,7 @@ export default function Cryptography(props) {
                     alignItems: "center",
                   }}
                 >
-                  {load2 ? (
+                  {shaload2 ? (
                     <>
                       <Image
                         src="/RippleLoad.svg"
@@ -752,7 +765,7 @@ export default function Cryptography(props) {
                       style={{ maxWidth: "100%", overflowWrap: "anywhere" }}
                     >
                       <p className={styles.matrixVal}>Your Encoded Text</p>
-                      <p className={styles.matrixVal}>{answer["hash"]}</p>
+                      <p className={styles.matrixVal}>{shaanswer["hash"]}</p>
                     </div>
                   )}
                 </div>
@@ -767,12 +780,10 @@ export default function Cryptography(props) {
 
         {/* MORE */}
         <div
-          className={current == "MORE" ? styles.ANumerical : styles.Numerical}
+          className={current.at(current.length - 1) == "MORE" ? styles.ANumerical : styles.Numerical}
           onMouseEnter={() => {
-            if (current != "MORE") {
-              setCurrent("MORE");
-              resetState();
-            }
+              setCurrent([...current, "MORE"]);
+              
           }}
         >
           <h1 className={styles.AboutTitle}>

@@ -71,7 +71,8 @@
   transition-duration: 300ms;
 }
 
-.ANumerical textarea {
+.ANumerical textarea, 
+.Numerical textarea {
   width: 65vw; 
   height: 20vh;
   transition-duration: 300ms;
