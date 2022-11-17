@@ -192,6 +192,9 @@
   justify-content: center;
   display: flex;
   margin-left: -3.5vw;
+  animation-duration: .5s;
+  animation-name: animate-pop;
+  animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
 }
 
 .Modal {
