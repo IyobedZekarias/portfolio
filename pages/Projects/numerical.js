@@ -633,7 +633,7 @@ export default function Numerical(props) {
               >
                 <form className={styles.ModalForm}>
                   <label className={styles.ModalName}>
-                    Number of Varialbes:
+                    Number of Variables:
                     <input
                       className={styles.ModalInput}
                       type="text"
