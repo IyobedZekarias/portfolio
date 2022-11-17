@@ -81,7 +81,7 @@ export default function Cryptography(props) {
       else if (submit["function"] == "sha")
         setshaAnswer(json)
       
-      setBody({shaplain:body["shaplain"], aesplain:body["aesplain"]})
+      setBody({shaplain:body["shaplain"], aesplain:body["aesplain"], a:body["a"], b:body["b"]})
     } catch (error) {
       alert(error);
     }
@@ -460,7 +460,7 @@ export default function Cryptography(props) {
                       className={styles.matrixTot}
                       style={{ maxWidth: "100%", overflowWrap: "anywhere" }}
                     >
-                      <p className={styles.matrixVal}>{nnianswer["ans"]}</p>
+                      <p style={{color: 'black'}}>{nnianswer["ans"]}</p>
                     </div>
                   )}
                 </div>
