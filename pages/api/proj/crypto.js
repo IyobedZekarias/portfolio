@@ -6,6 +6,16 @@ export default async function handler(req, res) {
   // const body = req.body
   // body['api-addition'] = true;
 
+
+  if (req.body["function"] == 'rsa' && req.body["op"].includes("key")) {
+    res
+      .status(405)
+      .send({
+        message:
+          "For RSA keys open a websocket with wss://cppapi-portfolio-iz.herokuapp.com/rsakey",
+      });
+    return
+  }
   const config = {
     method: "POST",
     headers: {

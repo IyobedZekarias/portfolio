@@ -26,6 +26,7 @@ export default function Cryptography(props) {
   
   const [nnilevel2, setnni2] = useState(false);
   const [nniload2, setLnni2] = useState(false);
+  const [modExp, setmodExp] = useState(false)
 
   const [aeslevel2, setaes2] = useState(false);
   const [aesload2, setLaes2] = useState(false);
@@ -35,18 +36,54 @@ export default function Cryptography(props) {
   const [shalevel2, setsha2] = useState(false);
   const [shaload2, setLsha2] = useState(false);
 
-
   const [nnianswer, setnniAnswer] = useState({});
   const [aesanswer, setaesAnswer] = useState({});
   const [shaanswer, setshaAnswer] = useState({});
+  const [rsaanswer, setrsaAnswer] = useState({})
 
-  const [modExp, setmodExp] = useState(false)
+  const [rsakeys, setRSAKeys] = useState({})
+  const [rsaLoad1, setRSAL1] = useState(true)
+  const [rsaLoad2, setRSAL2] = useState(false)
+  const [rsalevel2, setRSA2] = useState(false)
+  const [rsaEffect, setRSAEffect] = useState(false)
+  const [rsaExpand, setRSAExpand] = useState(false)
+
+
+  const [rsaws, setRSAWS] = useState(undefined)
+  const [genKeys, setGenKeys] = useState(true)
+
+  useEffect(() => {
+    setRSAWS(new WebSocket("wss://cppapi-portfolio-iz.herokuapp.com/rsakey"));
+  }, [rsaEffect])
+
+  useEffect(() => {
+    if(rsaws == undefined || !genKeys) return
+    rsaws.onopen = (event) => {
+      console.log("opened websocket");
+      if (!("pub" in rsakeys)) rsaws.send("regen")
+      else rsaws.send("key");
+    };
+
+    rsaws.onmessage = (event) => {
+      try {
+        if(JSON.stringify(rsakeys) != event.data) setRSAKeys(JSON.parse(event.data));
+        setRSAL1(false);
+      } catch (e) {
+        console.log(event.data);
+      }
+    };
+
+    rsaws.onclose = (event) => {
+      console.log("closed websocket");
+    };
+  }, [rsaws]);
 
   const endLoads = () => {
     setLnni2(false);
     setLaes2(false);
     setLaes3(false);
     setLsha2(false);
+    setRSAL2(false)
   }
 
   const resetState = () => {
@@ -54,7 +91,7 @@ export default function Cryptography(props) {
   };
 
   const handleAPIcall = async (e, submit) => {
-    console.log(submit)
+    // console.log(submit)
     const config = {
       method: "POST",
       headers: {
@@ -80,8 +117,10 @@ export default function Cryptography(props) {
         setnniAnswer(json)
       else if (submit["function"] == "sha")
         setshaAnswer(json)
+      else if (submit["function"] == "rsa")
+        setrsaAnswer(json)
       
-      setBody({shaplain:body["shaplain"], aesplain:body["aesplain"], a:body["a"], b:body["b"]})
+      setBody({shaplain:body["shaplain"], aesplain:body["aesplain"], a:body["a"], b:body["b"], rsatext:body["rsatext"]})
     } catch (error) {
       alert(error);
     }
@@ -126,6 +165,21 @@ export default function Cryptography(props) {
     setBody({ ...body, [e.target.name]: e.target.value });
   };
 
+  const downloadKeys = () => {
+    const elementpriv = document.createElement("a");
+    const elementpub = document.createElement("a")
+    const filepriv = new Blob([rsakeys["priv"]], { type: 'text/plain' });
+    const filepub = new Blob([rsakeys["pub"]], { type: 'text/plain' })
+    elementpub.href = URL.createObjectURL(filepub);
+    elementpriv.href = URL.createObjectURL(filepriv)
+    elementpub.download = "pub.iyo";
+    elementpriv.download = "priv.iyo";
+    document.body.appendChild(elementpub); // Required for this to work in FireFox
+    document.body.appendChild(elementpriv);
+    elementpub.click()
+    elementpriv.click()
+  }
+
   return (
     <div className={styles.container}>
       <Header
@@ -138,11 +192,12 @@ export default function Cryptography(props) {
         {/* DESCRIPTION */}
         <div
           className={
-            current.at(current.length - 1).includes("Description") ? styles.ANumerical : styles.Numerical
+            current.at(current.length - 1).includes("Description")
+              ? styles.ANumerical
+              : styles.Numerical
           }
           onMouseEnter={() => {
-              setCurrent([...current, "Description"]);
-              
+            setCurrent([...current, "Description"]);
           }}
         >
           <h1 className={styles.AboutTitle}>Cryptography</h1>
@@ -196,10 +251,13 @@ export default function Cryptography(props) {
         {/* NNI */}
         <div
           onMouseEnter={() => {
-              setCurrent([...current, "NNI"]);
-              
+            setCurrent([...current, "NNI"]);
           }}
-          className={current.at(current.length - 1).includes("NNI") ? styles.ANumerical : styles.Numerical}
+          className={
+            current.at(current.length - 1).includes("NNI")
+              ? styles.ANumerical
+              : styles.Numerical
+          }
         >
           <h1 className={styles.AboutTitle}>
             Multiprecision Non Negative Integers
@@ -460,7 +518,318 @@ export default function Cryptography(props) {
                       className={styles.matrixTot}
                       style={{ maxWidth: "100%", overflowWrap: "anywhere" }}
                     >
-                      <p style={{color: 'black'}}>{nnianswer["ans"]}</p>
+                      <p style={{ color: "black" }}>{nnianswer["ans"]}</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        {/* RSA */}
+        <div
+          onMouseEnter={() => {
+            setCurrent([...current, "RSA"]);
+          }}
+          className={
+            current.at(current.length - 1).includes("RSA")
+              ? styles.ANumerical
+              : styles.Numerical
+          }
+        >
+          <h1 className={styles.AboutTitle}>RSA Encoding</h1>
+          {current.includes("RSA") ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <div
+                className={styles.Matrix}
+                style={{
+                  display: "flex",
+                  maxWidth: "80%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  transitionDuration: "3s",
+                }}
+              >
+                {rsaLoad1 ? (
+                  genKeys == true ? (
+                    <>
+                      <h3 style={{ color: "black" }}>
+                        This is going to take some time... go grab a cup of
+                        coffee!
+                      </h3>
+                      <br />
+                      <Image
+                        src="/RippleLoad.svg"
+                        alt="Loading Logo"
+                        width={100}
+                        height={100}
+                      />
+                      <br />
+                      <p style={{ color: "black" }}>
+                        The reason this takes so long is becuase the RSA
+                        algorithm is computationally expensive to do without a
+                        library like GMP. In this algorithm I'm using my own
+                        4096-bit Multiprecision integegers, which aren't nearly
+                        as optimized as the best libraries in the world. OpenSSL
+                        for example, does the same thing as what I am doing but
+                        they are using a faster memory optimizing algorithm.
+                      </p>
+                      <br />
+                      <p style={{ color: "black" }}>
+                        To see why this algorithm takes so long on smaller or
+                        bigger numbers go to the Multiprecision Non Negative
+                        Integers (NNI) section and use the Modular
+                        Exponentiation function
+                      </p>
+                      <button
+                        className={styles.ModalSubmit}
+                        type="button"
+                        value="Submit"
+                        onClick={(e) => {
+                          rsaws.close();
+                          setGenKeys(false);
+                        }}
+                      >
+                        Upload Keys Instead
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        style={{
+                          display: "flex",
+                          maxWidth: "80%",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "row",
+                        }}
+                      >
+                        <>
+                          <label
+                            className={styles.ModalSubmit}
+                            type="button"
+                            value="Submit"
+                          >
+                            Upload Public Key
+                            <input
+                              className={styles.ModalSubmit}
+                              type="file"
+                              hidden
+                              accept=".iyo"
+                              onChange={(e) => {
+                                e.preventDefault();
+                                const reader = new FileReader();
+                                reader.onload = async (e) => {
+                                  const text = e.target.result;
+                                  setRSAKeys({ ...rsakeys, pub: text });
+                                };
+                                reader.readAsText(e.target.files[0]);
+                              }}
+                            />
+                          </label>
+                        </>
+                        <>
+                          <label
+                            className={styles.ModalSubmit}
+                            type="button"
+                            value="Submit"
+                          >
+                            Upload Private Key
+                            <input
+                              className={styles.ModalSubmit}
+                              type="file"
+                              hidden
+                              accept=".iyo"
+                              onChange={(e) => {
+                                e.preventDefault();
+                                const reader = new FileReader();
+                                reader.onload = async (e) => {
+                                  const text = e.target.result;
+                                  setRSAKeys({ ...rsakeys, priv: text });
+                                };
+                                reader.readAsText(e.target.files[0]);
+                              }}
+                            />
+                          </label>
+                        </>
+                      </div>
+                      <button
+                        className={styles.ModalSubmit}
+                        type="button"
+                        value="Submit"
+                        onClick={(e) => {
+                          setRSAEffect(!rsaEffect);
+                          setGenKeys(true);
+                          setRSAKeys({});
+                        }}
+                      >
+                        Generate Keys Instead
+                      </button>
+                    </>
+                  )
+                ) : (
+                  <div
+                    className={styles.matrixTot}
+                    style={{
+                      maxWidth: "100%",
+                      overflowWrap: "anywhere",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <p style={{ color: "black" }}>Your public key</p>
+                    <p style={{ color: "black" }}>
+                      {rsaExpand
+                        ? rsakeys["pub"]
+                        : rsakeys["pub"].substr(0, 40).concat("...")}
+                    </p>
+                    <br />
+                    <p style={{ color: "black" }}>Your private key</p>
+                    <p style={{ color: "black" }}>
+                      {rsaExpand
+                        ? rsakeys["priv"]
+                        : rsakeys["priv"].substr(0, 40).concat("...")}
+                    </p>
+                    <div>
+                      <button
+                        className={styles.ModalSubmit}
+                        type="button"
+                        value="Submit"
+                        onClick={downloadKeys}
+                      >
+                        Download Your Keys
+                      </button>
+                      <button
+                        className={styles.ModalSubmit}
+                        type="button"
+                        value="Submit"
+                        onClick={() => setRSAExpand(!rsaExpand)}
+                      >
+                        {rsaExpand ? "Minimize":"Show Full Keys"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {"pub" in rsakeys && "priv" in rsakeys ? (
+                <form className={styles.ModalForm}>
+                  <label
+                    className={styles.ModalName}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    Text to Encode/Decode
+                    <textarea
+                      className={styles.ModalInput}
+                      type="text"
+                      name="rsatext"
+                      placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam nulla porttitor massa id. Platea dictumst vestibulum rhoncus est pellentesque. Mattis molestie a iaculis at erat pellentesque adipiscing commodo elit."
+                      value={body["rsatext"]}
+                      onFocus={handleFocus}
+                      onChange={handleChange}
+                    />
+                  </label>
+                  <div>
+                    <button
+                      className={styles.ModalSubmit}
+                      type="button"
+                      value="Submit"
+                      onClick={(e) => {
+                        const submit = {
+                          message: body["rsatext"],
+                          pub: rsakeys["pub"],
+                          op: "encode",
+                          function: "rsa",
+                        };
+                        setRSAL2(true);
+                        handleAPIcall(e, submit);
+                        setRSA2(true);
+                      }}
+                    >
+                      Run Encode
+                    </button>
+                    <button
+                      className={styles.ModalSubmit}
+                      type="button"
+                      value="Submit"
+                      onClick={(e) => {
+                        const submit = {
+                          cipher: body["rsatext"],
+                          priv: rsakeys["priv"],
+                          op: "decode",
+                          function: "rsa",
+                        };
+                        setRSAL2(true);
+                        handleAPIcall(e, submit);
+                        setRSA2(true);
+                      }}
+                    >
+                      Run Decode
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <></>
+              )}
+              {rsalevel2 ? (
+                <div
+                  className={styles.Matrix}
+                  style={{
+                    display: "flex",
+                    maxWidth: "80%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "30px",
+                  }}
+                >
+                  {rsaLoad2 ? (
+                    <>
+                      <Image
+                        src="/RippleLoad.svg"
+                        alt="Loading Logo"
+                        width={100}
+                        height={100}
+                      />
+                    </>
+                  ) : (
+                    <div
+                      className={styles.matrixTot}
+                      style={{ maxWidth: "100%", overflowWrap: "anywhere" }}
+                    >
+                      {"cipher" in rsaanswer ? (
+                        <>
+                          <p className={styles.matrixVal}>Encoded Text</p>
+                          <p className={styles.matrixVal}>
+                            {rsaanswer["cipher"]}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className={styles.matrixVal}>Decoded Message</p>
+                          <p className={styles.matrixVal}>
+                            {rsaanswer["message"]}
+                          </p>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -476,10 +845,13 @@ export default function Cryptography(props) {
         {/* AES */}
         <div
           onMouseEnter={() => {
-              setCurrent([...current, "AES"]);
-              
+            setCurrent([...current, "AES"]);
           }}
-          className={current.at(current.length -1).includes("AES") ? styles.ANumerical : styles.Numerical}
+          className={
+            current.at(current.length - 1).includes("AES")
+              ? styles.ANumerical
+              : styles.Numerical
+          }
         >
           <h1 className={styles.AboutTitle}>AES Cipher</h1>
           {current.includes("AES") ? (
@@ -517,7 +889,7 @@ export default function Cryptography(props) {
                   type="button"
                   value="Submit"
                   onClick={(e) => {
-                    let plain = body["aesplain"]
+                    let plain = body["aesplain"];
                     const submit = {
                       ...body,
                       plain: body["aesplain"],
@@ -527,7 +899,7 @@ export default function Cryptography(props) {
                     setLaes2(true);
                     handleAPIcall(e, submit);
                     setaes2(true);
-                    setBody({...body, key:""})
+                    setBody({ ...body, key: "" });
                   }}
                 >
                   Run Encoding
@@ -676,10 +1048,13 @@ export default function Cryptography(props) {
         {/* SHA */}
         <div
           onMouseEnter={() => {
-              setCurrent([...current, "SHA"]);
-              
+            setCurrent([...current, "SHA"]);
           }}
-          className={current.at(current.length - 1) == "SHA" ? styles.ANumerical : styles.Numerical}
+          className={
+            current.at(current.length - 1) == "SHA"
+              ? styles.ANumerical
+              : styles.Numerical
+          }
         >
           <h1 className={styles.AboutTitle}>SHA Encoding</h1>
           {current.includes("SHA") ? (
@@ -780,10 +1155,13 @@ export default function Cryptography(props) {
 
         {/* MORE */}
         <div
-          className={current.at(current.length - 1) == "MORE" ? styles.ANumerical : styles.Numerical}
+          className={
+            current.at(current.length - 1).includes("MORE")
+              ? styles.ANumerical
+              : styles.Numerical
+          }
           onMouseEnter={() => {
-              setCurrent([...current, "MORE"]);
-              
+            setCurrent([...current, "MORE"]);
           }}
         >
           <h1 className={styles.AboutTitle}>
