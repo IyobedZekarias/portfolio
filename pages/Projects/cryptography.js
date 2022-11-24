@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import {useRouter} from "next/router"
 import styles from "../../styles/Home.module.css";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
@@ -52,6 +53,9 @@ export default function Cryptography(props) {
   const [rsaws, setRSAWS] = useState(undefined)
   const [genKeys, setGenKeys] = useState(true)
 
+
+  const router = useRouter()
+
   useEffect(() => {
     setRSAWS(new WebSocket("wss://cppapi-portfolio-iz.herokuapp.com/rsakey"));
   }, [rsaEffect])
@@ -76,6 +80,27 @@ export default function Cryptography(props) {
     rsaws.onclose = (event) => {
       console.log("closed websocket");
     };
+
+
+    window.onpopstate = () => {
+      rsaws.close()
+    }
+    window.onabort = () => {
+      rsaws.close()
+    }
+
+    const handleRouteChange = (url, { shallow }) => {
+      rsaws.close()
+    };
+
+    router.events.on("routeChangeStart", handleRouteChange);
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method:
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+    
   }, [rsaws]);
 
   const endLoads = () => {
