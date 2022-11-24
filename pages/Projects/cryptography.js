@@ -58,6 +58,8 @@ export default function Cryptography(props) {
 
   useEffect(() => {
     setRSAWS(new WebSocket("wss://cppapi-portfolio-iz.herokuapp.com/rsakey"));
+    // let ws = new WebSocket("wss://cppapi-portfolio-iz.herokuapp.com/rsakey")
+    // ws.ready
   }, [rsaEffect])
 
   useEffect(() => {
@@ -87,10 +89,11 @@ export default function Cryptography(props) {
 
 
     window.onpopstate = () => {
-      rsaws.close()
+      
+      if(rsaws.readyState !== WebSocket.CLOSED)rsaws.close()
     }
     window.onabort = () => {
-      rsaws.close()
+      if (rsaws.readyState !== WebSocket.CLOSED) rsaws.close();
     }
     // document.addEventListener("sleep", () => {
     //   rsaws.close();
@@ -98,7 +101,7 @@ export default function Cryptography(props) {
     // document.addEventListener('wake', () => setRSAEffect(!rsaEffect))
 
     const handleRouteChange = (url, { shallow }) => {
-      rsaws.close()
+      if (rsaws.readyState !== WebSocket.CLOSED) rsaws.close();
     };
 
     router.events.on("routeChangeStart", handleRouteChange);
