@@ -64,7 +64,10 @@ export default function Cryptography(props) {
     if(rsaws == undefined || !genKeys) return
     rsaws.onopen = (event) => {
       console.log("opened websocket");
-      if (!("pub" in rsakeys)) rsaws.send("regen")
+      if (!("pub" in rsakeys)) {
+        console.log("regen")
+        rsaws.send("regen")
+      }
       else rsaws.send("key");
     };
 
@@ -72,6 +75,7 @@ export default function Cryptography(props) {
       try {
         if(JSON.stringify(rsakeys) != event.data) setRSAKeys(JSON.parse(event.data));
         setRSAL1(false);
+        rsaws.close()
       } catch (e) {
         console.log(event.data);
       }
@@ -88,6 +92,10 @@ export default function Cryptography(props) {
     window.onabort = () => {
       rsaws.close()
     }
+    // document.addEventListener("sleep", () => {
+    //   rsaws.close();
+    // });
+    // document.addEventListener('wake', () => setRSAEffect(!rsaEffect))
 
     const handleRouteChange = (url, { shallow }) => {
       rsaws.close()
